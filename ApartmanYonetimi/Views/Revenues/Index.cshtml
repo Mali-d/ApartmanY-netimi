@@ -1,0 +1,411 @@
+﻿@model IEnumerable<Revenues>
+
+@{
+    ViewBag.Title = "Aidat Listesi";
+    DateTime startDate = ViewBag.StartDate;
+    DateTime endDate = ViewBag.EndDate;
+}
+<style>
+    .buttons-excel {
+        margin-left:115px !important;
+    }
+</style>
+
+<div class="form-horizontal">
+    <div class="col-md-12 tab-title">
+        <ul class="nav nav-pills mb-3 form-group">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tab1" aria-selected="false"><b>TEK DAİRE AİDAT</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tab2" aria-selected="false"><b>BÜTÜN DAİRELERE AİDAT</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tab3" aria-selected="false"><b>GİDERİ DAİRELERE BÖL</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tab4" aria-selected="false"><b>ÇOKLU AİDAT EKLE</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tab5" aria-selected="false"><b>YILLIK AİDAT EKLE</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#close" aria-selected="false">KAPAT</a>
+            </li>
+            <li class="nav-item pull-right">
+                <a class="nav-link" data-toggle="pill" href="#tab10" aria-selected="false"><b>FİLTRE</b></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="tab-content">
+    <div id="close"></div>
+    <div class="tab-pane " id="tab1">
+        @using (Html.BeginForm("_CreateEdit", "Revenues", FormMethod.Post, new { id = "create" }))
+        {
+            <div class="form-horizontal add-new-item" align="center">
+                <div class="form-group row">
+                    <label class="control-label col-md-1"><b>AİDAT TİPİ</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("RevenuesTypeId", null, htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                    <label class="control-label col-md-1"><b>TUTAR</b></label>
+                    <div class="col-md-3">
+                        <input name="Money" class="form-control money" required />
+                    </div>
+                    <label class="control-label col-md-1"><b>ÖDEME TARİHİ</b></label>
+                    <div class="col-md-3">
+                        <input name="Date" type="date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-1"><b>DAİRE NO</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("ApartmentId", null, "Seçiniz", htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                    <label class="control-label col-md-1"><b>KİM ÖDEYECEK</b></label>
+                    <div class="col-md-3">
+                        <select name="IsRender" class="form-control select2" required>
+                            <option value="true">Oturan</option>
+                            <option value="false">Ev Sahibi</option>
+                        </select>
+                    </div>
+                    <label class="control-label col-md-1"><b>AÇIKLAMA</b></label>
+                    <div class="col-md-3">
+                        <textarea style="max-width:100% !important;" name="Description" class="form-control" maxlength="128"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <input type="submit" value="KAYDET" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="tab-pane " id="tab2">
+        @using (Html.BeginForm("AllCreate", "Revenues", FormMethod.Post, new { id = "create" }))
+        {
+            <div class="form-horizontal add-new-item" align="center">
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>AİDAT TİPİ</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("RevenuesTypeId", null, htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                    <label class="control-label col-md-1"><b>TUTAR</b></label>
+                    <div class="col-md-3">
+                        <input name="Money" class="form-control money" required />
+                    </div>
+                    <label class="control-label col-md-1"><b>ÖDEME TARİHİ</b></label>
+                    <div class="col-md-3">
+                        <input name="Date" type="date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>KİM ÖDEYECEK</b></label>
+                    <div class="col-md-3">
+                        <select name="IsRender" class="form-control select2" required>
+                            <option value="true">Oturan</option>
+                            <option value="false">Ev Sahibi</option>
+                        </select>
+                    </div>
+                    <label class="control-label col-md-1"><b>DAİREPAYI KULLAN</b></label>
+                    <div class="col-md-3">
+                        <select name="HouseSize" class="form-control select2" required>
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                    <label class="control-label col-md-1"><b>AÇIKLAMA</b></label>
+                    <div class="col-md-3">
+                        <textarea style="max-width:100% !important;" name="Description" class="form-control" maxlength="128"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="submit" value="KAYDET" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="tab-pane " id="tab3">
+        @using (Html.BeginForm("ShareAllCreate", "Revenues", FormMethod.Post, new { id = "create" }))
+        {
+            <div class="form-horizontal add-new-item" align="center">
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>AİDAT TİPİ</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("RevenuesTypeId", null, htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                    <label class="control-label col-md-1"><b>TUTAR</b></label>
+                    <div class="col-md-3">
+                        <input name="Money" class="form-control money" required />
+                    </div>
+                    <label class="control-label col-md-1"><b>ÖDEME TARİHİ</b></label>
+                    <div class="col-md-3">
+                        <input name="Date" type="date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>KİM ÖDEYECEK</b></label>
+                    <div class="col-md-3">
+                        <select name="IsRender" class="form-control select2" required>
+                            <option value="true">Oturan</option>
+                            <option value="false">Ev Sahibi</option>
+                        </select>
+                    </div>
+                    <label class="control-label col-md-1"><b>DAİREPAYI KULLAN</b></label>
+                    <div class="col-md-3">
+                        <select name="HouseSize" class="form-control select2" required>
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                    <label class="control-label col-md-1"><b>AÇIKLAMA</b></label>
+                    <div class="col-md-3">
+                        <textarea style="max-width:100% !important;" name="Description" class="form-control" maxlength="128"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="submit" value="KAYDET" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="tab-pane " id="tab4">
+        @using (Html.BeginForm("MultipleCreate", "Revenues", FormMethod.Post, new { id = "create" }))
+        {
+            <div class="form-horizontal add-new-item" align="center">
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>AİDAT TİPİ</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("RevenuesTypeId", null, htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                    <label class="control-label col-md-1"><b>KİM ÖDEYECEK</b></label>
+                    <div class="col-md-3">
+                        <select name="IsRender" class="form-control select2" required>
+                            <option value="true">Oturan</option>
+                            <option value="false">Ev Sahibi</option>
+                        </select>
+                    </div>
+                    <label class="control-label col-md-1"><b>ÖDEME TARİHİ</b></label>
+                    <div class="col-md-3">
+                        <input name="Date" type="date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>AÇIKLAMA</b></label>
+                    <div class="col-md-11">
+                        <textarea style="max-width:100% !important;" name="Description" class="form-control" maxlength="128"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @foreach (var item in (SelectList)ViewBag.ApartmentId)
+                    {
+                        <label class="control-label col-md-1"><b>@item.Text</b></label>
+                        <div class="col-md-3">
+                            <input name="" data-id="@item.Value" class="form-control money add-Revenues" />
+                        </div>
+                    }
+
+                    <div id="selectedRevenues" style="color:black; ">
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="submit" value="KAYDET" class="btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="tab-pane " id="tab5">
+        @using (Html.BeginForm("YearCreate", "Revenues", FormMethod.Post, new { id = "create" }))
+        {
+        <div class="form-horizontal add-new-item" align="center">
+            <div class="form-group">
+                <label class="control-label col-md-1"><b>AİDAT TİPİ</b></label>
+                <div class="col-md-3">
+                    @Html.DropDownList("RevenuesTypeId", null, htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                </div>
+                <label class="control-label col-md-1"><b>BAŞLANGIÇ TARİHİ</b></label>
+                <div class="col-md-3">
+                    <input name="Date" type="date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                </div>
+                <label class="control-label col-md-1"><b>KAÇ AY</b></label>
+                <div class="col-md-3">
+                    <input name="Months" type="number" class="form-control" required min="2"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-1"><b>TUTAR</b></label>
+                <div class="col-md-3">
+                    <input name="Money" class="form-control money" required />
+                </div>
+                <label class="control-label col-md-1"><b>KİM ÖDEYECEK</b></label>
+                <div class="col-md-3">
+                    <select name="IsRender" class="form-control select2" required>
+                        <option value="true">Oturan</option>
+                        <option value="false">Ev Sahibi</option>
+                    </select>
+                </div>
+                <label class="control-label col-md-1"><b>DAİREPAYI KULLAN</b></label>
+                <div class="col-md-3">
+                    <select name="HouseSize" class="form-control select2" required>
+                        <option value="true">Evet</option>
+                        <option value="false">Hayır</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-1"><b>AÇIKLAMA</b></label>
+                <div class="col-md-11">
+                    <textarea style="max-width:100% !important;" name="Description" class="form-control" maxlength="128"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <input type="submit" value="KAYDET" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="tab-pane " id="tab10">
+        @using (Html.BeginForm())
+        {
+            <div class="form-horizontal add-new-item" align="center">
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>DAİRE SEÇİNİZ</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("ApartmentId", null, "Seçiniz", htmlAttributes: new { @class = "form-control", @title = "Daire Seçiniz" })
+                    </div>
+                    <label class="control-label col-md-1"><b>BAŞLANGIÇ TARİHİ</b></label>
+                    <div class="col-md-3">
+                        <input class="form-control" type="date" name="startDate" value="@startDate.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <label class="control-label col-md-1"><b>BİTİŞ TARİHİ</b></label>
+                    <div class="col-md-3">
+                        <input class="form-control" type="date" name="endDate" value="@endDate.ToString("yyyy-MM-dd")" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="submit" value="GETİR" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="form-horizontal table-div">
+    <div class="col-md-12 table-border">
+        <div class="form-group">
+            <div class="col-md-12 table-title">
+                AİDAT LİSTESİ
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                @using (Html.BeginForm("AllDelete", "Revenues", FormMethod.Post, new { id = "" }))
+                {
+                    <table class="table table-striped table-bordered responsive" id="dataTable">
+                        <input type="submit" style="position: absolute;z-index: 9;" class="btn btn-danger btn btn-secondary" value="Seçilenleri Sil" />
+                        <thead>
+                            <tr>
+                                <th style="width:100px; text-align:center;">
+                                    <div class="btn-group">
+                                        @*<a id="checkAll" style="padding: 3px 3px 3px 3px;" href="#" class="btn btn-default">H. Seç</a>*@
+                                        <input type="checkbox" style="width: 20px; height: 20px;margin-right: 10px;" id="checkAll" class="btn btn-secondary" />
+                                    </div>
+                                </th>
+                                <th>No</th>
+                                <th>Daire</th>
+                                <th>Tipi</th>
+                                <th>Tutar</th>
+                                <th>Ödeme Tarihi</th>
+                                <th>Kim Ödeyecek</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int i = 1;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <input type="checkbox" style="width: 15px; height: 15px;margin-right: 10px;" class="btn btn-secondary" value="@item.Id" name="checkId" />
+                                        </td>
+                                        <td>
+                                            @i
+                                        </td>
+                                        <td>
+                                            @((item.Apartment.BlockId != null ? (item.Apartment.Block.Name + " - ") : "") + item.Apartment.No)
+                                        </td>
+                                        <td>
+                                            @(item.RevenuesType.Name + (item.Description != null ? " (" + item.Description + " )" : ""))
+                                        </td>
+                                        <td>@item.Money</td>
+                                        <td>@item.Date.ToShortDateString()</td>
+                                        <td>@(item.IsRender == true ? "Oturan" : "Ev Sahibi")</td>
+                                        <td style="text-align:center; width:100px">
+                                            <div class="btn-group">
+                                                <a data-toggle="modal" href="~/Revenues/_CreateEdit/@item.Id" class="modal-link btn btn-warning btn-secondary">
+                                                    <i class="far fa-edit"></i>
+                                                </a>
+                                                <a class="btn btn-danger btn-secondary" onclick="bootbox.confirm('Silmek İstediğinize Emin Misiniz?', function (q) { if (!q) return true; else window.location.href = '@Url.Action("Delete","Revenues")/@item.Id'})">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(".add-Revenues").change(function () {
+            let $this = $(this);
+            if ($($this).val().length == 0) {
+
+                //var element = document.getElementById("selectedRevenues");
+                //var child = document.getElementById($($this).attr("data-id"));
+                //element.removeChild(child);
+                $('.'+$($this).attr("data-id")).remove();
+            } else {
+                 $('.'+$($this).attr("data-id")).remove();
+                var x = document.createElement("INPUT");
+                //x.setAttribute("style", "dislay-none");
+                x.setAttribute("name", "ids");
+                x.setAttribute("value", $($this).attr("data-id") + ";" + $($this).val());
+                x.setAttribute("class", $($this).attr("data-id"));
+                $("#selectedRevenues").append(x);
+            }
+        });
+
+        $(function () {
+            $("#Aidatlar").addClass("active");
+            $("#Aidat").addClass("active");
+        });
+
+        $("#checkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    </script>
+}

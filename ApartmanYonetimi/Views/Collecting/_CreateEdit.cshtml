@@ -1,0 +1,90 @@
+﻿@model Collecting
+
+@{
+    Layout = "~/Views/Shared/_LayoutPartial.cshtml";
+    ViewBag.Title = "RevenuesCreate";
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="background-color:red;width: 24px;">&times;</button>
+    <center style="padding-top: 4px;"><h4><b>KAYIT DÜZENLE</b></h4></center>
+</div>
+
+@using (Html.BeginForm("_CreateEdit", "Collecting", FormMethod.Post, new { id = "create" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.ApartmentId, "DAİRE NO", htmlAttributes: new { @class = "control-label col-md-1" })
+        <div class="col-md-3">
+            @Html.DropDownList("ApartmentId", null, htmlAttributes: new { @class = "form-control select2" })
+            @Html.ValidationMessageFor(model => model.ApartmentId, "", new { @class = "text-danger" })
+        </div>
+        @Html.LabelFor(model => model.IsRender, "KİM ÖDEYECEK", htmlAttributes: new { @class = "control-label col-md-1" })
+        <div class="col-md-3">
+            <select name="IsRender" class="form-control select2" required>
+                <option @(Model.IsRender == true ? "selected='selected'" : "") value="true">Oturan</option>
+                <option @(Model.IsRender == false ? "selected='selected'" : "") value="false">Ev Sahibi</option>
+            </select>
+        </div>
+        @Html.LabelFor(model => model.Date, "TARİHİ", htmlAttributes: new { @class = "control-label col-md-1" })
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "Date", @Value = Model.Date.ToString("yyyy-MM-dd") } })
+            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Money, "TUTAR", htmlAttributes: new { @class = "control-label col-md-1" })
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.Money, new { htmlAttributes = new { @class = "form-control money" } })
+            @Html.ValidationMessageFor(model => model.Money, "", new { @class = "text-danger" })
+        </div>
+        @Html.LabelFor(model => model.ApartmentId, "DAİRE NO", htmlAttributes: new { @class = "control-label col-md-1" })
+        <div class="col-md-3">
+            @Html.DropDownList("SafeTypeId", null, htmlAttributes: new { @class = "form-control select2" })
+            @Html.ValidationMessageFor(model => model.ApartmentId, "", new { @class = "text-danger" })
+        </div>
+        @Html.LabelFor(model => model.Description, "AÇIKLAMA", htmlAttributes: new { @class = "control-label col-md-1" })
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12" align="center">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">KAPAT</button>
+            <input type="submit" value="KAYDET" class="btn btn-success" />
+        </div>
+    </div>
+</div>
+}
+
+@*<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <a class="btn btn-warning" href="~/Collecting">GERİ DÖN</a>
+            <button class="btn btn-success" id="form">KAYDET</button>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+                $("#form").click(function () {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "@Url.Action("_CreateEdit")",true);
+	        xhr.onload=function(e) {
+                if (this.readyState === 4) {
+                    //var request=TempData["error"]
+                    alert("Kayıt Yapılmıştır.");
+                    //window.location.reload();
+                } else {
+                    alert("Hata oluştu kayıt yapılamadı.");
+                }
+                    };
+                    var formData = new FormData(document.getElementById("create"));
+                    xhr.send(formData);
+        });
+    </script>
+}*@

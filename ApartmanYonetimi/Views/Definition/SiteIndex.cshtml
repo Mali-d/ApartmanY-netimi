@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Site>
+@{
+    ViewBag.Title = "SiteIndex";
+}
+
+<div class="form-horizontal" style="background-color:#c1e0ff;" align="center">
+    <div class="form-group">
+        <div class="col-md-12"><h4><b> <a data-toggle="collapse" href="#collapse1">SİTE EKLE</a></b></h4></div>
+    </div>
+</div>
+@using (Html.BeginForm("_SiteCreateEdit", "Definition", FormMethod.Post, new { id = "create", enctype="multipart/form-data" }))
+{
+<div class="form-horizontal add-new-item collapse" id="collapse1" align="center">
+    <div class="form-group">
+        <label class="control-label col-md-1"><b>SİTE ADI</b></label>
+        <div class="col-md-3">
+            <input name="Name" class="form-control" required />
+        </div>
+        <label class="control-label col-md-1"><b>DOMAİN</b></label>
+        <div class="col-md-3">
+            <input name="Domain" class="form-control" required />
+        </div>
+        <label class="control-label col-md-1"><b>BİTİŞ TARİHİ</b></label>
+        <div class="col-md-3">
+            <input name="EndDate" type="date" class="form-control" required />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2"><b>Fotoğraf</b></label>
+        <div class="col-md-8">
+            <input name="Photo" type="file" class="form-control" required />
+        </div>
+        <div class="col-md-2">
+            <input type="submit" value="KAYDET" class="btn btn-success col-md-12" />
+        </div>
+    </div>
+</div>
+}
+<table class="table">
+    <tr>
+        <th>
+            No
+        </th>
+        <th>
+            Adı
+        </th>
+        <th>
+            Domain
+        </th>
+        <th>
+            Üyelik Bitiş
+        </th>
+        <th>
+            Fotoğraf
+        </th>
+        <th>İşlemler</th>
+    </tr>
+    @{ int i = 1;}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @i
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @item.Domain
+            </td>
+            <td>
+                @item.EndDate.ToShortDateString()
+            </td>
+            <td>
+                <a href="~/Content/images/@item.PhotoName"> <img width="20" src="~/Content/Images/@item.PhotoName" /></a>
+            </td>
+            <td>
+                @Html.ActionLink("Düzenle", "_SiteCreateEdit", new { id = item.Id }) |
+                @Html.ActionLink("Sil", "SiteDelete", new { id = item.Id })
+            </td>
+        </tr>
+        i++;
+    }
+
+</table>
+
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#SiteEkle").addClass("active");
+        });
+    </script>
+}

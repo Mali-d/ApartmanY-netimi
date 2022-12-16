@@ -1,0 +1,74 @@
+﻿@model ApartmanYonetimi.Site
+
+@{
+    ViewBag.Title = "Apartmanım";
+    Layout = null;
+}
+<!doctype html>
+<html class="no-js " lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+
+    <title>:: Aero Bootstrap4 Admin :: Sign In</title>
+    <!-- Favicon-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Custom Css -->
+    <link href="~/Content/Custom/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Custom/css/style.min.css" rel="stylesheet" />
+</head>
+<body class="theme-blush">
+
+    <div class="authentication">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12" align="center">
+                    <h3><b style="color:#0c7ce6">  @Model.Name SİTE YÖNETİM PROGRAMI</b></h3>
+                </div>
+                <div class="col-sm-12" align="center">
+                    <h3><b style="color:red">   @ViewBag.Message</b></h3>
+                </div>
+               
+                <div class="col-lg-4 col-sm-12">
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-signin card auth_form" }))
+                    {
+                        <div class="header">
+                            <img class="logo" src="~/Content/images/logo.png" alt="">
+                        </div>
+                        <div class="body">
+                            <div class="input-group mb-3">
+                                <input name="UserName" type="text" class="form-control" placeholder="Telefon" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="zmdi zmdi-account-circle"></i></span>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input name="Password" type="password" class="form-control" placeholder="Şifre" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="zmdi zmdi-lock"></i></span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block waves-effect waves-light">Giriş Yap</button>
+                        </div>
+                    }
+                    <div class="copyright text-center">
+                        &copy;
+                        <script>document.write(new Date().getFullYear())</script>,
+                    </div>
+                </div>
+                <div class="col-lg-8 col-sm-12">
+                    <div class="card">
+                        <img src="~/Content/images/@Model.PhotoName" alt="Sign In" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="~/Scripts/Custom/js/libscripts.bundle.js"></script>
+    <script src="~/Scripts/Custom/js/vendorscripts.bundle.js"></script>
+</body>
+</html>

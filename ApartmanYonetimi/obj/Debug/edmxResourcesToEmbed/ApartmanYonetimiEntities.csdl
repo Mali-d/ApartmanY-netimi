@@ -1,0 +1,941 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ApartmanYonetimiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="C__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Apartment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BlockId" Type="Int32" />
+    <Property Name="SiteId" Type="Int32" Nullable="false" />
+    <Property Name="No" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="HouseSize" Type="Int32" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Block" Relationship="Self.FK_Apartment_Block" FromRole="Apartment" ToRole="Block" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_Apartment_Site" FromRole="Apartment" ToRole="Site" />
+    <NavigationProperty Name="Collecting" Relationship="Self.FK_Collecting_Apartment" FromRole="Apartment" ToRole="Collecting" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_Person_Apartment" FromRole="Apartment" ToRole="Person" />
+    <NavigationProperty Name="Revenues" Relationship="Self.FK_Revenues_Apartment" FromRole="Apartment" ToRole="Revenues" />
+  </EntityType>
+  <EntityType Name="ApartmentCleaning">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ApartmentCleaningTypeId" Type="Int32" Nullable="false" />
+    <Property Name="CreatePersonId" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Description" Type="String" MaxLength="1048" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ApartmentCleaningType" Relationship="Self.FK_ApartmentCleaning_ApartmentCleaningType" FromRole="ApartmentCleaning" ToRole="ApartmentCleaningType" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_ApartmentCleaning_Person" FromRole="ApartmentCleaning" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="ApartmentCleaningType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" />
+    <Property Name="SiteType" Type="Byte" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ApartmentCleaning" Relationship="Self.FK_ApartmentCleaning_ApartmentCleaningType" FromRole="ApartmentCleaningType" ToRole="ApartmentCleaning" />
+  </EntityType>
+  <EntityType Name="AspNetRoles">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AspNetUserRoles" Relationship="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" FromRole="AspNetRoles" ToRole="AspNetUserRoles" />
+  </EntityType>
+  <EntityType Name="AspNetUserClaims">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUserLogins">
+    <Key>
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUserRoles">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="RoleId" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="AspNetRoles" Relationship="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" FromRole="AspNetUserRoles" ToRole="AspNetRoles" />
+    <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" FromRole="AspNetUserRoles" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUsers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+    <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+    <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+    <NavigationProperty Name="AspNetUserRoles" Relationship="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserRoles" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_Person_AspNetUsers" FromRole="AspNetUsers" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Block">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SiteId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Apartment" Relationship="Self.FK_Apartment_Block" FromRole="Block" ToRole="Apartment" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_Block_Site" FromRole="Block" ToRole="Site" />
+  </EntityType>
+  <EntityType Name="Collecting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ApartmentId" Type="Int32" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" Nullable="false" />
+    <Property Name="SafeTypeId" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Money" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="IsRender" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Apartment" Relationship="Self.FK_Collecting_Apartment" FromRole="Collecting" ToRole="Apartment" />
+    <NavigationProperty Name="SafeType" Relationship="Self.FK_Collecting_SafeType" FromRole="Collecting" ToRole="SafeType" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_Collecting_Site" FromRole="Collecting" ToRole="Site" />
+    <NavigationProperty Name="Receipt" Relationship="Self.FK_Receipt_Collecting" FromRole="Collecting" ToRole="Receipt" />
+    <NavigationProperty Name="RenevuesCollecting_RS" Relationship="Self.FK_RenevuesCollecting_RS_Collecting" FromRole="Collecting" ToRole="RenevuesCollecting_RS" />
+  </EntityType>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SiteId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="PersonName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Adress" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_Company_Site" FromRole="Company" ToRole="Site" />
+    <NavigationProperty Name="Payment" Relationship="Self.FK_Payment_Company" FromRole="Company" ToRole="Payment" />
+  </EntityType>
+  <EntityType Name="Payment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SiteId" Type="Int32" Nullable="false" />
+    <Property Name="CompanyId" Type="Int32" Nullable="false" />
+    <Property Name="CreatePersonId" Type="Int32" Nullable="false" />
+    <Property Name="PaymentTypeId" Type="Int32" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Money" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Company" Relationship="Self.FK_Payment_Company" FromRole="Payment" ToRole="Company" />
+    <NavigationProperty Name="PaymentType" Relationship="Self.FK_Payment_PaymentType" FromRole="Payment" ToRole="PaymentType" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_Payment_Person" FromRole="Payment" ToRole="Person" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_Payment_Site" FromRole="Payment" ToRole="Site" />
+  </EntityType>
+  <EntityType Name="PaymentType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" />
+    <Property Name="SiteType" Type="Byte" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Payment" Relationship="Self.FK_Payment_PaymentType" FromRole="PaymentType" ToRole="Payment" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AspNetUserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" Nullable="false" />
+    <Property Name="ApartmentId" Type="Int32" />
+    <Property Name="PersonTypeId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Apartment" Relationship="Self.FK_Person_Apartment" FromRole="Person" ToRole="Apartment" />
+    <NavigationProperty Name="ApartmentCleaning" Relationship="Self.FK_ApartmentCleaning_Person" FromRole="Person" ToRole="ApartmentCleaning" />
+    <NavigationProperty Name="AspNetUsers" Relationship="Self.FK_Person_AspNetUsers" FromRole="Person" ToRole="AspNetUsers" />
+    <NavigationProperty Name="Payment" Relationship="Self.FK_Payment_Person" FromRole="Person" ToRole="Payment" />
+    <NavigationProperty Name="PersonType" Relationship="Self.FK_Person_PersonType" FromRole="Person" ToRole="PersonType" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_Person_Site" FromRole="Person" ToRole="Site" />
+    <NavigationProperty Name="Receipt" Relationship="Self.FK_Receipt_Person" FromRole="Person" ToRole="Receipt" />
+    <NavigationProperty Name="RenevuesCollecting_RS" Relationship="Self.FK_RenevuesCollecting_RS_Person" FromRole="Person" ToRole="RenevuesCollecting_RS" />
+    <NavigationProperty Name="Subsistence" Relationship="Self.FK_Subsistence_Person" FromRole="Person" ToRole="Subsistence" />
+  </EntityType>
+  <EntityType Name="PersonType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" />
+    <Property Name="SiteType" Type="Byte" Nullable="false" />
+    <Property Name="Type" Type="Byte" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_Person_PersonType" FromRole="PersonType" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Receipt">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CollectingId" Type="Int32" Nullable="false" />
+    <Property Name="RevenuesTypeId" Type="Int32" Nullable="false" />
+    <Property Name="PersonId" Type="Int32" Nullable="false" />
+    <Property Name="Money" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="IsRender" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Collecting" Relationship="Self.FK_Receipt_Collecting" FromRole="Receipt" ToRole="Collecting" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_Receipt_Person" FromRole="Receipt" ToRole="Person" />
+    <NavigationProperty Name="RevenuesType" Relationship="Self.FK_Receipt_RevenuesType" FromRole="Receipt" ToRole="RevenuesType" />
+  </EntityType>
+  <EntityType Name="RenevuesCollecting_RS">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RevenuesId" Type="Int32" Nullable="false" />
+    <Property Name="CollectingId" Type="Int32" Nullable="false" />
+    <Property Name="PersonId" Type="Int32" Nullable="false" />
+    <Property Name="Money" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Collecting" Relationship="Self.FK_RenevuesCollecting_RS_Collecting" FromRole="RenevuesCollecting_RS" ToRole="Collecting" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_RenevuesCollecting_RS_Person" FromRole="RenevuesCollecting_RS" ToRole="Person" />
+    <NavigationProperty Name="Revenues" Relationship="Self.FK_RenevuesCollecting_RS_Revenues" FromRole="RenevuesCollecting_RS" ToRole="Revenues" />
+  </EntityType>
+  <EntityType Name="Revenues">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ApartmentId" Type="Int32" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" Nullable="false" />
+    <Property Name="RevenuesTypeId" Type="Int32" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Money" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="IsRender" Type="Boolean" Nullable="false" />
+    <Property Name="CollectingStatus" Type="Byte" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Apartment" Relationship="Self.FK_Revenues_Apartment" FromRole="Revenues" ToRole="Apartment" />
+    <NavigationProperty Name="RenevuesCollecting_RS" Relationship="Self.FK_RenevuesCollecting_RS_Revenues" FromRole="Revenues" ToRole="RenevuesCollecting_RS" />
+    <NavigationProperty Name="RevenuesType" Relationship="Self.FK_Revenues_RevenuesType" FromRole="Revenues" ToRole="RevenuesType" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_Revenues_Site" FromRole="Revenues" ToRole="Site" />
+  </EntityType>
+  <EntityType Name="RevenuesType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" />
+    <Property Name="SiteType" Type="Byte" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Receipt" Relationship="Self.FK_Receipt_RevenuesType" FromRole="RevenuesType" ToRole="Receipt" />
+    <NavigationProperty Name="Revenues" Relationship="Self.FK_Revenues_RevenuesType" FromRole="RevenuesType" ToRole="Revenues" />
+  </EntityType>
+  <EntityType Name="SafeType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" />
+    <Property Name="SiteType" Type="Byte" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Collecting" Relationship="Self.FK_Collecting_SafeType" FromRole="SafeType" ToRole="Collecting" />
+  </EntityType>
+  <EntityType Name="Site">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Domain" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="PhotoName" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Apartment" Relationship="Self.FK_Apartment_Site" FromRole="Site" ToRole="Apartment" />
+    <NavigationProperty Name="Block" Relationship="Self.FK_Block_Site" FromRole="Site" ToRole="Block" />
+    <NavigationProperty Name="Collecting" Relationship="Self.FK_Collecting_Site" FromRole="Site" ToRole="Collecting" />
+    <NavigationProperty Name="Company" Relationship="Self.FK_Company_Site" FromRole="Site" ToRole="Company" />
+    <NavigationProperty Name="Payment" Relationship="Self.FK_Payment_Site" FromRole="Site" ToRole="Payment" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_Person_Site" FromRole="Site" ToRole="Person" />
+    <NavigationProperty Name="Revenues" Relationship="Self.FK_Revenues_Site" FromRole="Site" ToRole="Revenues" />
+    <NavigationProperty Name="Subsistence" Relationship="Self.FK_Subsistence_Site" FromRole="Site" ToRole="Subsistence" />
+  </EntityType>
+  <EntityType Name="Subsistence">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PersonId" Type="Int32" Nullable="false" />
+    <Property Name="SiteId" Type="Int32" Nullable="false" />
+    <Property Name="Money" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Description" Type="String" MaxLength="1048" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifyUserName" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Person" Relationship="Self.FK_Subsistence_Person" FromRole="Subsistence" ToRole="Person" />
+    <NavigationProperty Name="Site" Relationship="Self.FK_Subsistence_Site" FromRole="Subsistence" ToRole="Site" />
+  </EntityType>
+  <Association Name="FK_Apartment_Block">
+    <End Role="Block" Type="Self.Block" Multiplicity="0..1" />
+    <End Role="Apartment" Type="Self.Apartment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Block">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Apartment">
+        <PropertyRef Name="BlockId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Apartment_Site">
+    <End Role="Site" Type="Self.Site" Multiplicity="1" />
+    <End Role="Apartment" Type="Self.Apartment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Site">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Apartment">
+        <PropertyRef Name="SiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Collecting_Apartment">
+    <End Role="Apartment" Type="Self.Apartment" Multiplicity="1" />
+    <End Role="Collecting" Type="Self.Collecting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Apartment">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Collecting">
+        <PropertyRef Name="ApartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Person_Apartment">
+    <End Role="Apartment" Type="Self.Apartment" Multiplicity="0..1" />
+    <End Role="Person" Type="Self.Person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Apartment">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="ApartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Revenues_Apartment">
+    <End Role="Apartment" Type="Self.Apartment" Multiplicity="1" />
+    <End Role="Revenues" Type="Self.Revenues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Apartment">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Revenues">
+        <PropertyRef Name="ApartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApartmentCleaning_ApartmentCleaningType">
+    <End Role="ApartmentCleaningType" Type="Self.ApartmentCleaningType" Multiplicity="1" />
+    <End Role="ApartmentCleaning" Type="Self.ApartmentCleaning" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApartmentCleaningType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApartmentCleaning">
+        <PropertyRef Name="ApartmentCleaningTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ApartmentCleaning_Person">
+    <End Role="Person" Type="Self.Person" Multiplicity="1" />
+    <End Role="ApartmentCleaning" Type="Self.ApartmentCleaning" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ApartmentCleaning">
+        <PropertyRef Name="CreatePersonId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+    <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetRoles">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserRoles">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserClaims">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserLogins">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserRoles">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Person_AspNetUsers">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+    <End Role="Person" Type="Self.Person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="AspNetUserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Block_Site">
+    <End Role="Site" Type="Self.Site" Multiplicity="1" />
+    <End Role="Block" Type="Self.Block" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Site">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Block">
+        <PropertyRef Name="SiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Collecting_SafeType">
+    <End Role="SafeType" Type="Self.SafeType" Multiplicity="1" />
+    <End Role="Collecting" Type="Self.Collecting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SafeType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Collecting">
+        <PropertyRef Name="SafeTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Collecting_Site">
+    <End Role="Site" Type="Self.Site" Multiplicity="1" />
+    <End Role="Collecting" Type="Self.Collecting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Site">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Collecting">
+        <PropertyRef Name="SiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Receipt_Collecting">
+    <End Role="Collecting" Type="Self.Collecting" Multiplicity="1" />
+    <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Collecting">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Receipt">
+        <PropertyRef Name="CollectingId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RenevuesCollecting_RS_Collecting">
+    <End Role="Collecting" Type="Self.Collecting" Multiplicity="1" />
+    <End Role="RenevuesCollecting_RS" Type="Self.RenevuesCollecting_RS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Collecting">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RenevuesCollecting_RS">
+        <PropertyRef Name="CollectingId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Company_Site">
+    <End Role="Site" Type="Self.Site" Multiplicity="1" />
+    <End Role="Company" Type="Self.Company" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Site">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Company">
+        <PropertyRef Name="SiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payment_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="1" />
+    <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Payment">
+        <PropertyRef Name="CompanyId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payment_PaymentType">
+    <End Role="PaymentType" Type="Self.PaymentType" Multiplicity="0..1" />
+    <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PaymentType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Payment">
+        <PropertyRef Name="PaymentTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payment_Person">
+    <End Role="Person" Type="Self.Person" Multiplicity="1" />
+    <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Payment">
+        <PropertyRef Name="CreatePersonId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payment_Site">
+    <End Role="Site" Type="Self.Site" Multiplicity="1" />
+    <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Site">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Payment">
+        <PropertyRef Name="SiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Person_PersonType">
+    <End Role="PersonType" Type="Self.PersonType" Multiplicity="1" />
+    <End Role="Person" Type="Self.Person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PersonType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="PersonTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Person_Site">
+    <End Role="Site" Type="Self.Site" Multiplicity="1" />
+    <End Role="Person" Type="Self.Person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Site">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="SiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Receipt_Person">
+    <End Role="Person" Type="Self.Person" Multiplicity="1" />
+    <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Receipt">
+        <PropertyRef Name="PersonId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RenevuesCollecting_RS_Person">
+    <End Role="Person" Type="Self.Person" Multiplicity="1" />
+    <End Role="RenevuesCollecting_RS" Type="Self.RenevuesCollecting_RS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RenevuesCollecting_RS">
+        <PropertyRef Name="PersonId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Subsistence_Person">
+    <End Role="Person" Type="Self.Person" Multiplicity="1" />
+    <End Role="Subsistence" Type="Self.Subsistence" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Subsistence">
+        <PropertyRef Name="PersonId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Receipt_RevenuesType">
+    <End Role="RevenuesType" Type="Self.RevenuesType" Multiplicity="1" />
+    <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RevenuesType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Receipt">
+        <PropertyRef Name="RevenuesTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RenevuesCollecting_RS_Revenues">
+    <End Role="Revenues" Type="Self.Revenues" Multiplicity="1" />
+    <End Role="RenevuesCollecting_RS" Type="Self.RenevuesCollecting_RS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Revenues">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RenevuesCollecting_RS">
+        <PropertyRef Name="RevenuesId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Revenues_RevenuesType">
+    <End Role="RevenuesType" Type="Self.RevenuesType" Multiplicity="1" />
+    <End Role="Revenues" Type="Self.Revenues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RevenuesType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Revenues">
+        <PropertyRef Name="RevenuesTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Revenues_Site">
+    <End Role="Site" Type="Self.Site" Multiplicity="1" />
+    <End Role="Revenues" Type="Self.Revenues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Site">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Revenues">
+        <PropertyRef Name="SiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Subsistence_Site">
+    <End Role="Site" Type="Self.Site" Multiplicity="1" />
+    <End Role="Subsistence" Type="Self.Subsistence" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Site">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Subsistence">
+        <PropertyRef Name="SiteId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ApartmanYonetimiEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+    <EntitySet Name="Apartment" EntityType="Self.Apartment" />
+    <EntitySet Name="ApartmentCleaning" EntityType="Self.ApartmentCleaning" />
+    <EntitySet Name="ApartmentCleaningType" EntityType="Self.ApartmentCleaningType" />
+    <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" />
+    <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" />
+    <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" />
+    <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" />
+    <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" />
+    <EntitySet Name="Block" EntityType="Self.Block" />
+    <EntitySet Name="Collecting" EntityType="Self.Collecting" />
+    <EntitySet Name="Company" EntityType="Self.Company" />
+    <EntitySet Name="Payment" EntityType="Self.Payment" />
+    <EntitySet Name="PaymentType" EntityType="Self.PaymentType" />
+    <EntitySet Name="Person" EntityType="Self.Person" />
+    <EntitySet Name="PersonType" EntityType="Self.PersonType" />
+    <EntitySet Name="Receipt" EntityType="Self.Receipt" />
+    <EntitySet Name="RenevuesCollecting_RS" EntityType="Self.RenevuesCollecting_RS" />
+    <EntitySet Name="Revenues" EntityType="Self.Revenues" />
+    <EntitySet Name="RevenuesType" EntityType="Self.RevenuesType" />
+    <EntitySet Name="SafeType" EntityType="Self.SafeType" />
+    <EntitySet Name="Site" EntityType="Self.Site" />
+    <EntitySet Name="Subsistence" EntityType="Self.Subsistence" />
+    <AssociationSet Name="FK_Apartment_Block" Association="Self.FK_Apartment_Block">
+      <End Role="Block" EntitySet="Block" />
+      <End Role="Apartment" EntitySet="Apartment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Apartment_Site" Association="Self.FK_Apartment_Site">
+      <End Role="Site" EntitySet="Site" />
+      <End Role="Apartment" EntitySet="Apartment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Collecting_Apartment" Association="Self.FK_Collecting_Apartment">
+      <End Role="Apartment" EntitySet="Apartment" />
+      <End Role="Collecting" EntitySet="Collecting" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Person_Apartment" Association="Self.FK_Person_Apartment">
+      <End Role="Apartment" EntitySet="Apartment" />
+      <End Role="Person" EntitySet="Person" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Revenues_Apartment" Association="Self.FK_Revenues_Apartment">
+      <End Role="Apartment" EntitySet="Apartment" />
+      <End Role="Revenues" EntitySet="Revenues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApartmentCleaning_ApartmentCleaningType" Association="Self.FK_ApartmentCleaning_ApartmentCleaningType">
+      <End Role="ApartmentCleaningType" EntitySet="ApartmentCleaningType" />
+      <End Role="ApartmentCleaning" EntitySet="ApartmentCleaning" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ApartmentCleaning_Person" Association="Self.FK_ApartmentCleaning_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="ApartmentCleaning" EntitySet="ApartmentCleaning" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+      <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+      <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Person_AspNetUsers" Association="Self.FK_Person_AspNetUsers">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="Person" EntitySet="Person" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Block_Site" Association="Self.FK_Block_Site">
+      <End Role="Site" EntitySet="Site" />
+      <End Role="Block" EntitySet="Block" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Collecting_SafeType" Association="Self.FK_Collecting_SafeType">
+      <End Role="SafeType" EntitySet="SafeType" />
+      <End Role="Collecting" EntitySet="Collecting" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Collecting_Site" Association="Self.FK_Collecting_Site">
+      <End Role="Site" EntitySet="Site" />
+      <End Role="Collecting" EntitySet="Collecting" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Receipt_Collecting" Association="Self.FK_Receipt_Collecting">
+      <End Role="Collecting" EntitySet="Collecting" />
+      <End Role="Receipt" EntitySet="Receipt" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RenevuesCollecting_RS_Collecting" Association="Self.FK_RenevuesCollecting_RS_Collecting">
+      <End Role="Collecting" EntitySet="Collecting" />
+      <End Role="RenevuesCollecting_RS" EntitySet="RenevuesCollecting_RS" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Company_Site" Association="Self.FK_Company_Site">
+      <End Role="Site" EntitySet="Site" />
+      <End Role="Company" EntitySet="Company" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payment_Company" Association="Self.FK_Payment_Company">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="Payment" EntitySet="Payment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payment_PaymentType" Association="Self.FK_Payment_PaymentType">
+      <End Role="PaymentType" EntitySet="PaymentType" />
+      <End Role="Payment" EntitySet="Payment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payment_Person" Association="Self.FK_Payment_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="Payment" EntitySet="Payment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payment_Site" Association="Self.FK_Payment_Site">
+      <End Role="Site" EntitySet="Site" />
+      <End Role="Payment" EntitySet="Payment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Person_PersonType" Association="Self.FK_Person_PersonType">
+      <End Role="PersonType" EntitySet="PersonType" />
+      <End Role="Person" EntitySet="Person" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Person_Site" Association="Self.FK_Person_Site">
+      <End Role="Site" EntitySet="Site" />
+      <End Role="Person" EntitySet="Person" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Receipt_Person" Association="Self.FK_Receipt_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="Receipt" EntitySet="Receipt" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RenevuesCollecting_RS_Person" Association="Self.FK_RenevuesCollecting_RS_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="RenevuesCollecting_RS" EntitySet="RenevuesCollecting_RS" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Subsistence_Person" Association="Self.FK_Subsistence_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="Subsistence" EntitySet="Subsistence" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Receipt_RevenuesType" Association="Self.FK_Receipt_RevenuesType">
+      <End Role="RevenuesType" EntitySet="RevenuesType" />
+      <End Role="Receipt" EntitySet="Receipt" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RenevuesCollecting_RS_Revenues" Association="Self.FK_RenevuesCollecting_RS_Revenues">
+      <End Role="Revenues" EntitySet="Revenues" />
+      <End Role="RenevuesCollecting_RS" EntitySet="RenevuesCollecting_RS" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Revenues_RevenuesType" Association="Self.FK_Revenues_RevenuesType">
+      <End Role="RevenuesType" EntitySet="RevenuesType" />
+      <End Role="Revenues" EntitySet="Revenues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Revenues_Site" Association="Self.FK_Revenues_Site">
+      <End Role="Site" EntitySet="Site" />
+      <End Role="Revenues" EntitySet="Revenues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Subsistence_Site" Association="Self.FK_Subsistence_Site">
+      <End Role="Site" EntitySet="Site" />
+      <End Role="Subsistence" EntitySet="Subsistence" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

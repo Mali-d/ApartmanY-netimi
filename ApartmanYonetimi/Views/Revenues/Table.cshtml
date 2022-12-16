@@ -1,0 +1,306 @@
+﻿@model IEnumerable<Apartment>
+
+@{
+    ViewBag.Title = "RevenuesPrint";
+    List<Revenues> revenues = ViewBag.Revenues;
+    DateTime RevenuesDate = ViewBag.RevenuesDate;
+    List<ApartmanYonetimi.Models.ApartmentDebt> apartmentDebts = ViewBag.ApartmentDebt;
+}
+@*<style>
+
+    @@media only screen and (max-width: 600px) {
+        .test {
+            width: 1000px !important;
+        }
+        .responsive thead th:nth-child(2){
+            width: 1000px !important;
+        }
+    }
+</style>*@
+
+@using (Html.BeginForm("Table", "Revenues", FormMethod.Post, new { id = "create" }))
+{
+    if (User.IsInRole("Yonetici") || User.IsInRole("Admin"))
+    {
+        <div class="form-horizontal" style="margin-top: 5px;padding: 20px 5px 5px 5px;background-color: #337ab7; color: white; text-align: center;">
+            <div class="form-group">
+                <label class="control-label col-md-2"><b>YIL</b></label>
+                <div class="col-md-3">
+                    <select name="year" class="form-control select2" required>
+                        <option value=>Seçiniz</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                    </select>
+                </div>
+                <label class="control-label col-md-2"><b>AYLAR</b></label>
+                <div class="col-md-3">
+                    <select name="month" class="form-control select2" required>
+                        <option value=>Seçiniz</option>
+                        <option value="1">Ocak</option>
+                        <option value="2">Şubat</option>
+                        <option value="3">Mart</option>
+                        <option value="4">Nisan</option>
+                        <option value="5">Mayıs</option>
+                        <option value="6">Haziran</option>
+                        <option value="7">Temmuz</option>
+                        <option value="8">Ağustos</option>
+                        <option value="9">Eylül</option>
+                        <option value="10">Ekim</option>
+                        <option value="11">Kasım</option>
+                        <option value="12">Aralık</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" value="GETİR" class="btn btn-success col-md-12" />
+                </div>
+            </div>
+        </div>
+    }
+}
+@{
+    int collumCount = 10 + revenues.GroupBy(x => x.RevenuesTypeId).Count();
+}
+
+<div class="form-horizontal table-div">
+    <div class="col-md-12 table-border">
+        <div class="form-group">
+            <div class="col-md-12 table-title">
+                @RevenuesDate.ToString("MMMM") @RevenuesDate.Year AİDAT LİSTESİ
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <table class="table table-striped table-bordered responsive" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 5px; ">
+                                Sıra No
+                            </th>
+                            <th style="width:150px !important;">
+                                Daireler<label style="color:white;">aaaaaaaaaaaaaaaaa</label>
+                            </th>
+                            @foreach (var item in revenues.Where(x => x.IsRender == true).GroupBy(x => x.RevenuesTypeId).Select(x => new { RevenuesTypeName = (x.FirstOrDefault().RevenuesType.Name + (x.FirstOrDefault().Description != null ? " (" + x.FirstOrDefault().Description + ")" : "")) }).ToList())
+                            {
+                                <th style="width:100px;">@item.RevenuesTypeName</th>
+                            }
+                            @if (revenues.Where(x => x.IsRender == false).Sum(x => x.Money) > 0)
+                            {
+                                <th style="width: 100px;text-align: center;"> Oturan Toplam</th>
+                                foreach (var item in revenues.Where(x => x.IsRender == false).GroupBy(x => x.RevenuesTypeId).Select(x => new { RevenuesTypeName = (x.FirstOrDefault().RevenuesType.Name + (x.FirstOrDefault().Description != null ? " (" + x.FirstOrDefault().Description + ")" : "")) }).ToList())
+                                {
+                                    <th style="width:100px;">@item.RevenuesTypeName (Ev Sahibi)</th>
+                                }
+                                <th style="width:100px;">Ev Sahibi Toplam</th>
+                                <th style="width:50px !important;">Aidat Toplam</th>
+                                <th style="width:50px !important;">Eski Borç</th>
+                                <th style="width:50px !important;">Genel Toplam</th>
+                            }
+                            else
+                            {
+                                <th style="width:50px !important;">Aidat Toplam</th>
+                                <th style="width:50px !important;">Eski Borç</th>
+                                <th style="width:50px !important;">Genel Toplam</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int i = 1;
+                            var renderRevenuesType = revenues.Where(x => x.IsRender == true).GroupBy(x => x.RevenuesTypeId).Select(x => new { id = x.Key }).ToList();
+                            var ownerRevenuesType = revenues.Where(x => x.IsRender == false).GroupBy(x => x.RevenuesTypeId).Select(x => new { id = x.Key }).ToList();
+                        }
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @i
+                            </td>
+                            <td class="test" id="test">
+                                <b>@((item.BlockId != null ? (item.Block.Name + " - ") : "") + item.No) <label style="color:red;">  (@((apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) + revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money)).ToString("N2")) TL)</label></b>
+                            </td>
+                            @{
+                                var renderRevenues = revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == true).GroupBy(x => x.RevenuesTypeId).Select(x => new { RevenuesTypeId = x.Key, Money = x.Sum(y => y.Money) }).ToList();
+                                var ownerRevenues = revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == false).GroupBy(x => x.RevenuesTypeId).Select(x => new { RevenuesTypeId = x.Key, Money = x.Sum(y => y.Money) }).ToList();
+                            }
+
+                            @foreach (var item2 in renderRevenuesType)
+                            {
+                                var borc = renderRevenues.FirstOrDefault(x => x.RevenuesTypeId == item2.id);
+                                if (borc == null)
+                                {
+                                    <td style="text-align:right !important">--</td>
+                                }
+                                else
+                                {
+                                    <td style="text-align:right !important">@borc.Money.ToString("N2")</td>
+                                }
+                            }
+
+                            @if (revenues.Where(x => x.IsRender == false).Sum(x => x.Money) > 0)
+                            {
+                                <td style="text-align:right !important"><b>@revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == true).Sum(x => x.Money).ToString("N2")</b></td>
+                                foreach (var item2 in ownerRevenuesType)
+                                {
+                                    var borc = ownerRevenues.FirstOrDefault(x => x.RevenuesTypeId == item2.id);
+                                    if (borc == null)
+                                    {
+                                        <td style="text-align:right !important">--</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="text-align:right !important">@borc.Money.ToString("N2")</td>
+                                    }
+                                }
+                                <td style="text-align:right !important"> <b>@revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == false).Sum(x => x.Money).ToString("N2")</b></td>
+                                <td style="text-align:right !important">
+                                    <b>@revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money).ToString("N2")</b>
+                                    @if ((apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) + revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money)) <= 0)
+                                    {
+                                        if (revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) > 0)
+                                        {
+                                            <b style="color:green;">->Ödenmiş</b>
+                                        }
+                                    }
+
+                                    <label style="color:darkblue;">
+
+                                        @if (apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) > 0)
+                                        {
+                                            if (apartmentDebts.Where(x => x.ApartmentId == item.Id && x.IsRender == true).Sum(x => x.Money) > 0)
+                                            {
+                                                @Html.Raw(" + Oturan Eski Borç : " + (apartmentDebts.Where(x => x.ApartmentId == item.Id && x.IsRender == true).Sum(x => x.Money)).ToString("N2"))
+                                            }
+                                            if (apartmentDebts.Where(x => x.ApartmentId == item.Id && x.IsRender == false).Sum(x => x.Money) > 0)
+                                            {
+                                                @Html.Raw(" + Ev Sahibi Eski Borç : " + (apartmentDebts.Where(x => x.ApartmentId == item.Id && x.IsRender == false).Sum(x => x.Money) - revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == false).Sum(x => x.Money)).ToString("N2"))
+                                            }
+                                            <label style="color:red;">
+                                                = Toplam Borç =@((apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) + revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money)).ToString("N2"))
+                                            </label>
+                                        }
+                                        <a style="color:black;" href="~/Revenues/ApartmentDebt/@item.Id" class="btn btn-info btn-xs">İNCELE</a>
+                                    </label>
+                                </td>
+
+                                @*if (revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == false).Sum(x => x.Money) > 0)
+            {
+                <td style="text-align:right !important">@revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == true).Sum(x => x.Money).ToString("N2")</td>
+
+
+                foreach (var item2 in revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == false).GroupBy(x => x.RevenuesTypeId).Select(x => new { Money = x.Sum(y => y.Money) }).ToList())
+                {
+                    <td style="text-align:right !important">@item2.Money.ToString("N2")</td>
+                }
+                <td style="text-align:right !important">@revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == false).Sum(x => x.Money).ToString("N2")</td>
+                <td style="text-align:right !important">@revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money).ToString("N2")</td>
+            }
+            else
+            {
+
+                <td style="text-align:right !important">@revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == true).Sum(x => x.Money).ToString("N2")</td>
+                <td style="text-align:right !important">@revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == true).Sum(x => x.Money).ToString("N2")</td>
+
+                for (int z = 0; z <= revenues.Where(x => x.ApartmentId == item.Id && x.IsRender == false).GroupBy(x => x.RevenuesTypeId).Select(x => new { Money = x.Sum(y => y.Money) }).Count() + 1; z++)
+                {
+                    <td style="text-align:right !important"> --</td>
+                }
+                <td style="text-align:right !important">@revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money).ToString("N2")</td>
+            }*@
+                            }
+                            else
+                            {
+                                <td style="text-align:right !important">
+                                    <b>@revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money).ToString("N2")</b>
+                                    @if ((apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) + revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money)) <= 0)
+                                    {
+                                        if (revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) > 0)
+                                        {
+                                            <b style="color:green;">->Ödenmiş</b>
+                                        }
+                                    }
+                                </td>
+                                <td style="text-align:right !important">
+                                    <label style="color:red;">
+                                        @if (apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) > 0)
+                                        {
+                                            if (apartmentDebts.Where(x => x.ApartmentId == item.Id && x.IsRender == true).Sum(x => x.Money) > 0)
+                                            {
+                                                @Html.Raw("Oturan Eski Borç : " + (apartmentDebts.Where(x => x.ApartmentId == item.Id && x.IsRender == true).Sum(x => x.Money)).ToString("N2"))
+                                            }
+                                            if (apartmentDebts.Where(x => x.ApartmentId == item.Id && x.IsRender == false).Sum(x => x.Money) > 0)
+                                            {
+                                                @Html.Raw(" + Ev Sahibi Eski Borç : " + (apartmentDebts.Where(x => x.ApartmentId == item.Id && x.IsRender == false).Sum(x => x.Money)).ToString("N2"))
+                                            }
+                                        }
+                                    </label>
+                                </td>
+                                <td style="text-align:right !important">
+                                    <label>
+                                        @(apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) + revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money))
+                                        <a style="color:black;" href="~/Revenues/ApartmentDebt/@item.Id" class="btn btn-info btn-xs">İNCELE</a>
+                                    </label>
+                                </td>
+                            }
+                            @*<td>
+            @if (apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) > 0)
+            {
+                @Html.Raw(apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) - revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money))
+            }
+            else
+            {
+                @Html.Raw(apartmentDebts.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money) + revenues.Where(x => x.ApartmentId == item.Id).Sum(x => x.Money))
+            }
+            <a href="~/Revenues/ApartmentDebt/@item.Id"> Borç Detay</a>
+        </td>*@
+                        </tr>
+                            i++;
+                        }
+                    <tr>
+                        <td>@i</td>
+                        <td style="text-align:right;"><b>ALT TOPLAM </b></td>
+                        @foreach (var item3 in revenues.Where(x => x.IsRender == true).GroupBy(x => x.RevenuesTypeId).Select(x => new { Money = x.Sum(y => y.Money) }).ToList())
+                        {
+                            <td style="width:100px;text-align:right;"><b>@item3.Money.ToString("N2")</b></td>
+                        }
+                        @if (revenues.Where(x => x.IsRender == false).Sum(x => x.Money) > 0)
+                        {
+                            <td style="width:100px;text-align:right;"><b>@revenues.Where(x => x.IsRender == true).Sum(y => y.Money).ToString("N2")</b> </td>
+                            foreach (var item4 in revenues.Where(x => x.IsRender == false).GroupBy(x => x.RevenuesTypeId).Select(x => new { Money = x.Sum(y => y.Money) }).ToList())
+                            {
+                                <td style="width:100px;text-align:right;"><b>@item4.Money.ToString("N2")</b></td>
+                            }
+                            <td style="width:100px;text-align:right;"><b>@revenues.Where(x => x.IsRender == false).Sum(y => y.Money).ToString("N2")</b> </td>
+                            <td style="width:100px;text-align:right;"><b>@revenues.Sum(y => y.Money).ToString("N2")</b></td>
+                            <td style="width:100px;text-align:right;"><b>@apartmentDebts.Sum(y => y.Money).ToString("N2")</b></td>
+                            <td style="width:100px;text-align:right;"><b>@((revenues.Sum(y => y.Money) + apartmentDebts.Sum(y => y.Money)).ToString("N2"))</b></td>
+                        }
+                        else
+                        {
+                            <td style="width:100px;text-align:right;"><b>@revenues.Sum(y => y.Money).ToString("N2")</b></td>
+                            <td style="width:100px;text-align:right;"><b>@apartmentDebts.Sum(y => y.Money).ToString("N2")</b></td>
+                            <td style="width:100px;text-align:right;"><b>@((revenues.Sum(y => y.Money) + apartmentDebts.Sum(y => y.Money)).ToString("N2"))</b></td>
+                        }
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#AidatListesi").addClass("active");
+            $("#Aidat").addClass("active");
+            //setTimeout(function(){
+            //    $('.responsive thead th:eq(2)').hide();
+            //    $('.responsive tbody tr>td:nth-child(3)').hide()
+            //}, 500);
+
+        });
+    </script>
+}

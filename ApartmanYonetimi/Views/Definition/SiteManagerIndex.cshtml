@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Person>
+@{
+    ViewBag.Title = "SiteIndex";
+}
+
+<div class="form-horizontal" style="background-color:#c1e0ff;" align="center">
+    <div class="form-group">
+        <div class="col-md-12"><h4><b> <a data-toggle="collapse" href="#collapse1">YÖNETİCİ EKLE</a></b></h4></div>
+    </div>
+</div>
+@using (Html.BeginForm("RegisterSiteManager", "Account", FormMethod.Post, new { id = "create" }))
+{
+    <input style="display:none" name="StartDate" value="@DateTime.Now"/>
+    <input style="display:none" name="PersonTypeId" value="@ApartmanYonetimi.Models.PersonTypesEnums.Yonetici"/>
+<div class="form-horizontal add-new-item collapse" id="collapse1" align="center">
+    <div class="form-group">
+        <label class="control-label col-md-1"><b>YÖNETİCİ ADI</b></label>
+        <div class="col-md-3">
+            <input name="Name" class="form-control" required />
+        </div>
+        <label class="control-label col-md-1"><b>SİTE</b></label>
+        <div class="col-md-3">
+            @Html.DropDownList("SiteId", null, "Seçiniz", htmlAttributes: new { @class = "form-control" })
+        </div>
+        <label class="control-label col-md-1"><b>TELEFON</b></label>
+        <div class="col-md-3">
+            <input name="PhoneNumber" class="form-control" required maxlength="10" min="1000000000" />
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-1"><b>ŞİFRE</b></label>
+        <div class="col-md-3">
+            <input name="Password" type="password" class="form-control" required />
+        </div>
+        <div class="col-md-2">
+            <input type="submit" value="KAYDET" class="btn btn-success col-md-12" />
+        </div>
+    </div>
+</div>
+}
+<table class="table">
+    <tr>
+        <th>
+            No
+        </th>
+        <th>
+            Adı
+        </th>
+        <th>
+            Sitesi
+        </th>
+        <th>
+            Başlangıç Tarihi
+        </th>
+        <th>
+            Telefon
+        </th>
+        <th>İşlemler</th>
+    </tr>
+    @{ int i = 1;
+        string isActiveColor;
+            }
+    @foreach (var item in Model)
+    {
+        isActiveColor =item.IsActive==true? "":"background-color:red;color:white";
+        <tr style="@isActiveColor">
+            <td>
+                @i
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @item.Site.Name
+            </td>
+            <td>
+                @item.StartDate.ToShortDateString()
+            </td>
+            <td>
+                @item.PhoneNumber
+            </td>
+            <td>
+                @Html.ActionLink("Düzenle", "_SiteManagerCreateEdit", new { id = item.Id }) |
+                @Html.ActionLink("Sil", "SiteManagerDelete", new { id = item.Id })
+            </td>
+        </tr>
+        i++;
+    }
+
+</table>
+
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#YöneticiEkle").addClass("active");
+        });
+    </script>
+}

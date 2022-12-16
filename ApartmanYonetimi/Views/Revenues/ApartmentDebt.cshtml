@@ -1,0 +1,117 @@
+﻿@model IEnumerable<ApartmanYonetimi.Models.ApartmentDebt>
+
+@{
+    ViewBag.Title = "DebpIndex";
+}
+<div class="form-horizontal" style="background-color:#c1e0ff;" align="center">
+    <div class="form-group">
+        <div class="col-md-12"><h4><b>OTURAN CARİ DÖKÜMÜ (@(Model.FirstOrDefault() != null ? Model.FirstOrDefault().ApartmentNo : ""))</b></h4></div>
+    </div>
+</div>
+<table class="table">
+    <tr>
+        <th>
+            No
+        </th>
+        <th>
+            Ödeme Tarihi
+        </th>
+        <th>
+            Açıklama
+        </th>
+        <th style="text-align:right;">
+            Tutar
+        </th>
+    </tr>
+    @{ int i = 1;
+        string paymentColor;
+    }
+    @foreach (var item in Model.Where(x => x.IsRender == true).ToList())
+    {
+        paymentColor = item.Description == "Ödeme" ? "background-color:#6ae86a;" : "";
+        <tr style="@paymentColor">
+            <td>
+                @i
+            </td>
+            <td>
+                @item.Date.ToShortDateString()
+            </td>
+            <td>
+                @item.Description
+            </td>
+            <td style="text-align:right;">@item.Money </td>
+        </tr>
+        i++;
+    }
+    <tr>
+        <td style="text-align:right;" colspan="3">
+            <b>OTURAN BORÇ</b>
+        </td>
+        <td style="background-color:#e88282;text-align:right;"><b>@Model.Where(x => x.IsRender == true).Sum(x => x.Money)</b></td>
+    </tr>
+</table>
+
+<div class="form-horizontal" style="background-color:#c1e0ff;" align="center">
+    <div class="form-group">
+        <div class="col-md-12"><h4><b>EV SAHİBİ CARİ DÖKÜMÜ (@(Model.FirstOrDefault() != null ? Model.FirstOrDefault().ApartmentNo : ""))</b></h4></div>
+    </div>
+</div>
+<table class="table">
+    <tr>
+        <th>
+            No
+        </th>
+        <th>
+            Ödeme Tarihi
+        </th>
+        <th>
+            Açıklama
+        </th>
+        <th style="text-align:right;">
+            Tutar
+        </th>
+    </tr>
+    @{ int k = 1;}
+    @foreach (var item in Model.Where(x => x.IsRender == false).ToList())
+    {
+        paymentColor = item.Description == "Ödeme" ? "background-color:#6ae86a;" : "";
+        <tr style="@paymentColor">
+            <td>
+                @k
+            </td>
+            <td>
+                @item.Date.ToShortDateString()
+            </td>
+            <td>
+                @item.Description
+            </td>
+            <td style="text-align:right;">@item.Money</td>
+        </tr>
+        k++;
+    }
+    <tr>
+        <td style="text-align:right;" colspan="3">
+            <b>EV SAHİBİ BORÇ</b>
+        </td>
+        <td style="background-color:#e88282;text-align:right;"><b>@Model.Where(x => x.IsRender == false).Sum(x => x.Money)</b></td>
+    </tr>
+</table>
+
+
+<div class="form-horizontal" style="background-color:#c1e0ff;" align="center">
+    <div class="form-group">
+        <div class="col-md-12"><h4><b>DAİRE TOPLAM BORÇ (@(Model.FirstOrDefault() != null ? Model.FirstOrDefault().ApartmentNo : ""))</b></h4></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div style="background-color:#e88282;text-align:center;" class="col-md-12"><h3><b>@Model.Sum(x => x.Money)</b></h3> </div>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="~/Revenues/Table" class="btn btn-warning col-md-12"><b style="color:black;"> GERİ DÖN</b></a>
+    </div>
+</div>

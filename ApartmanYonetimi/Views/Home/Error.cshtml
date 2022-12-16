@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Error";
+}
+
+<style>
+
+    .portlet.box.red {
+        border: none;
+    }
+</style>
+
+<div class="container_survey">
+    <div class="portlet box red" style=" border 2px solid red;">
+        <div class="portlet-title" style="background-color:white;padding:40px;">
+            <center>
+                <i class="fa fa-exclamation-triangle" style="font-size: 75px; color: #0089ad;"></i>
+            </center>
+            <br />
+            <h1 style="color:#0089ad;text-align: center;">
+                Uyarı
+            </h1>
+            <br />
+
+            @if (ViewBag.Description == null || ViewBag.Description == "")
+            {
+                <div style="text-align: center; color:black">Sistem Hatası Oluştu.</div>
+            }
+
+            else
+            {
+
+                <div style="text-align:center;color: #1f2b3d;font-size: 26px;">@Html.Raw(ViewBag.Description)</div>
+            }
+            <br />
+            <center> <a onclick='history.go(-1)' class="btn btn-large btn-success">Geri Dön</a> </center>
+
+
+        </div>
+    </div>
+</div>
+<div>
+</div>
+
+
+
+

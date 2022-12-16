@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ApartmanYonetimi</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/plugin/datatables.min.css" rel="stylesheet" />
+    <link href="~/Content/plugin/Buttons-1.6.1/css/buttons.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/Select2/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .container {
+            width: 100% !important;
+        }
+
+        .modal .form-horizontal {
+            padding: 10px;
+        }
+
+        .active {
+            background-color: #36a9e0 !important;
+            /*color: white !important;*/
+        }
+
+        .buttons-excel {
+            margin-right: 10px;
+        }
+
+        .select2 {
+            width: 100% !important;
+        }
+
+        .form-control {
+            display: unset !important;
+        }
+
+        .select2-selection {
+            height: 34px !important;
+        }
+
+        .collapse-title {
+            background-color: #c1e0ff;
+            color: darkblue !important;
+            text-align: center;
+        }
+
+        .menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            .menu ul li ul {
+                display: none;
+                position: absolute;
+            }
+
+        .menu li {
+            color: white;
+            width: 130px;
+            text-align: center;
+        }
+
+            .menu li a {
+                display: block;
+                border-left: 1px solid #595959;
+                border-right: 1px solid #595959;
+                border-bottom: 3px solid #f9b233;
+                color: white !important;
+                padding-bottom: 15px;
+                padding-top: 15px;
+            }
+
+        .navbar-header ul li ul {
+            padding-left: 129px;
+            margin-top: -53px !important;
+        }
+
+        .menu ul li ul li {
+            background: #5f5f5f;
+        }
+
+        .menu ul li:hover ul {
+            display: block;
+            text-align: left;
+        }
+
+        @@media only screen and (max-width: 600px) {
+            .menu ul li ul {
+                padding-left: 129px;
+                margin-top: -53px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container body-content" style="padding-top: 10px;">
+        @RenderBody()
+        <footer>
+            <p>&copy; @DateTime.Now.Year</p>
+        </footer>
+    </div>
+    <div id="modal-container" class="modal fade" tabindex="-1" role="dialog" align="center" style="width:90%;right:5%;left:5%;">
+        <div class="modal-content" align="center">
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Content/plugin/datatables.min.js"></script>
+    <script src="~/Content/jquery.turkLirasi.min.js"></script>
+    <script src="~/Content/Select2/dist/js/select2.full.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+<script>
+    $(function () {
+        $('body').on('click', '.modal-link', function (e) {
+            e.preventDefault();
+            $(this).attr('data-target', '#modal-container');
+            $(this).attr('data-toggle', 'modal');
+        });
+
+        // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+        $('body').on('click', '.modal-close-btn', function () {
+            $('#modal-container').modal('hide');
+        });
+
+        //clear modal cache, so that new content can be loaded
+        $('#modal-container').on('hidden.bs.modal', function () {
+            $(this).removeData('bs.modal');
+        });
+
+        $('#CancelModal').on('click', function () {
+            return false;
+        });
+        //$("form").submit(function () {
+        //    $(".loading").show();
+        //})
+        $('.select2').select2({
+            placeholder: "Seçiniz",
+        });
+        $(".money").keypress(function (e) {
+            let $this = $(this);
+            var str = $($this).val().substring($($this).val().lastIndexOf(","), $($this).val().length);
+            if (e.keyCode == 46 && $($this).val().indexOf(",") < 0 && $($this).val().length > 0) {
+                e.preventDefault();
+                $($this).val($($this).val() + ",");
+                return false;
+            } else if (e.keyCode < 44 || e.keyCode > 57 || e.keyCode == 47 || e.keyCode == 45) {
+                return false;
+            } else if ($($this).val().indexOf(",") >= 0) {
+                if (e.keyCode < 44 || e.keyCode > 57 || e.keyCode == 44 || e.keyCode == 46 || str.length > 2) {
+                    return false;
+                }
+            } else if ((e.keyCode == 46 || e.keyCode == 44) && $($this).val().length == 0) {
+                return false;
+            } else if ($($this).val().length == 10) {
+                return false;
+            }
+        })
+
+        //$("a:not(.dontshowloading)[href][href!='']:not([href*='#']):not([href*='javascript'])").click(function () {
+        //    $(".loading").show();
+        //})
+        //$(document).ready(function () {
+        //    $(".loading").hide();
+        //});
+
+    });
+
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'Liste',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                data = $('<p>' + data.replace(/(?:\r\n|\r|\n)/gi, '').replace(/ /gi, "").replace('İNCELE', '') + '</p>').text();
+                                return $.isNumeric(data.replace(',', '.')) ? data.replace(',', '.') : data;
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Liste',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                data = $('<p>' + data.replace(/(?:\r\n|\r|\n)/gi, '').replace(/ /gi, "").replace('İNCELE', '') + '</p>').text();
+                                return $.isNumeric(data.replace(',', '.')) ? data.replace(',', '.') : data;
+                            }
+                        }
+                    }
+                }
+            ],
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "Hepsi"]],
+            "iDisplayLength": 50,
+            "responsive": true,
+            "language": {
+                "emptyTable": "Gösterilecek ver yok.",
+                "processing": "Veriler yükleniyor",
+                "sDecimal": ".",
+                "sInfo": "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+                "sInfoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ".",
+                "sLengthMenu": "Sayfada _MENU_ kayıt göster",
+                "sLoadingRecords": "Yükleniyor...",
+                "sSearch": "Ara:",
+                "sZeroRecords": "Eşleşen kayıt bulunamadı",
+                "oPaginate": {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
+                }
+            }
+        });
+    });
+</script>

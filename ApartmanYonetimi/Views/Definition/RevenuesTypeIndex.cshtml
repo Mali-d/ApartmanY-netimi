@@ -1,0 +1,101 @@
+﻿@model IEnumerable<RevenuesType>
+@using ApartmanYonetimi.Models
+
+@{
+    ViewBag.Title = "RevenuesTypeIndex";
+}
+
+<div class="form-horizontal">
+    <div class="col-md-12 tab-title">
+        <ul class="nav nav-pills mb-3">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tab1" aria-selected="false"><b>AİDAT TİPİ EKLE</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#close" aria-selected="false">KAPAT</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="tab-content">
+    <div id="close"></div>
+    <div class="tab-pane " id="tab1">
+        @using (Html.BeginForm("_RevenuesTypeCreateEdit", "Definition", FormMethod.Post, new { id = "create" }))
+        {
+            <div class="form-horizontal add-new-item">
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>AİDAT TİPİ</b></label>
+                    <div class="col-md-2">
+                        <input name="Name" class="form-control" required />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="submit" value="KAYDET" class="btn btn-success col-md-12" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="form-horizontal table-div">
+    <div class="col-md-12 table-border">
+        <div class="form-group">
+            <div class="col-md-12 table-title">
+                AİDAT TİPİ LİSTESİ
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <table class="table table-striped table-bordered responsive table-hover" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Aidat Tipi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    @{ int i = 1;}
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @i
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @if (item.SiteType == GeneralTypesEnums.SiteyeOzel)
+                                    {
+                                        <div class="btn-group">
+                                            <a data-toggle="modal" href="~/Definition/_RevenuesTypeCreateEdit/@item.Id" class="modal-link btn btn-warning btn-secondary">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-secondary" onclick="bootbox.confirm('Silmek İstediğinize Emin Misiniz?', function (q) { if (!q) return true; else window.location.href = '@Url.Action("RevenuesTypeDelete","Definition")/@item.Id'})">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#AidatTipleri").addClass("active");
+            $("#Ayarlar").addClass("active");
+        });
+    </script>
+}
+
+

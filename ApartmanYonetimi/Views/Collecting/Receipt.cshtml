@@ -1,0 +1,489 @@
+﻿@model  Collecting
+
+@{
+    ViewBag.Title = "Receipt";
+    var receipts = Model.RenevuesCollecting_RS.Where(x => x.IsActive == true).ToList();
+}
+@*<div class="form-horizontal" style="background-color:#c1e0ff;">
+    <div class="col-md-12 tab-title">
+        <ul class="nav nav-pills mb-3">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tab1" aria-selected="false"><b>ÖDEME EKLE</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#close" aria-selected="false">KAPAT</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="tab-content">
+    <div id="close"></div>
+    <div class="tab-pane " id="tab1">
+        @using (Html.BeginForm("_ReceiptCreate", "Collecting", FormMethod.Post, new { id = "create" }))
+        {
+            <input style="display:none;" name="CollectingId" value="@Model.Id" />
+            <div class="form-horizontal add-new-item">
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>AİDAT TİPİ</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("RevenuesTypeId", null, "Seçiniz", htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                    <label class="control-label col-md-1"><b>ÖDEME YAPAN</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("PersonId", null, "Seçiniz", htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                    <label class="control-label col-md-1"><b>TUTAR</b></label>
+                    <div class="col-md-3">
+                        <input name="Money" class="form-control money" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>AÇIKLAMA</b></label>
+                    <div class="col-md-11">
+                        <textarea style="max-width:100% !important;" name="Description" class="form-control" maxlength="128"> </textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="submit" value="KAYDET" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="form-horizontal table-div">
+            <div class="col-md-12 table-border">
+                <div class="form-group">
+                    <div class="col-md-12 table-title">
+                        MAKBUZ LİSTESİ
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Aidat Tipi</th>
+                                    <th>Ödeme Yapan</th>
+                                    <th>Tutar</th>
+                                    <th>Açıklama</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int i = 1;
+                                    foreach (var item in receipts)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @i
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Revenues.RevenuesType.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Person.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Money)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Sil", "ReceiptDelete", new { id = item.Id })
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+    <div class="form-horizontal table-div">
+        <div class="col-md-12 table-border">
+            <div class="form-group">
+                <div class="col-md-12 table-title">
+                    MAKBUZ LİSTESİ
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Aidat Tipi</th>
+                                <th>Aidat Tarihi</th>
+                                <th>Ödeme Yapan</th>
+                                <th>Tutar</th>
+                                <th>Açıklama</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1;
+                                var aitOlduguAyYil= "";
+                                foreach (var item in receipts)
+                                {
+                                    using (Html.BeginForm("_ReceiptEdit", "Collecting", FormMethod.Post, new { id = "create" }))
+                                    {
+                                        aitOlduguAyYil += aitOlduguAyYil.Contains(item.Revenues.Date.ToString("dd.MM.yyyy"))==false? @item.Revenues.Date.ToString("dd.MM.yyyy") +" - " : "";
+                                        <tr>
+                                            <td>
+                                                <input style="display:none" value="@item.Id" name="id" />
+                                                @i
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Revenues.RevenuesType.Name)
+                                            </td>
+                                            <td>
+                                                @item.Revenues.Date.ToString("dd.MM.yyyy")
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Person.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Money)
+                                            </td>
+                                            <td>
+                                                <input class="form-control" value="@item.Description" name="description" />
+                                            </td>
+                                            <td>
+                                                <input type="submit" value="Düzenle" class="btn btn-success" />
+                                                @*@Html.ActionLink("Sil", "ReceiptDelete", new { id = item.Id })*@
+                                            </td>
+                                        </tr>
+                                    }
+                                    i++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div id="printDiv">
+    @if (Model.RenevuesCollecting_RS.Any())
+    {
+        <table style="width: 750px">
+            <tr>
+                <td colspan="6">
+                    <h2 style="text-align:center;font-weight:bold;">APARTMAN GELİR MAKBUZU</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Daire No : </td>
+                <td> @(Model.Apartment.BlockId != null ? Model.Apartment.Block.Name + "-" + Model.Apartment.No : Model.Apartment.No)</td>
+                <td colspan="2" style="width:160px;"></td>
+                <td align="right" style="width:100px;font-weight:bold;"> Makbuz No : &nbsp;</td>
+                <td align="right" style="width: 40px"> @Model.Id</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Ait Olduğu Ay-Yıl : </td>
+                <td> @aitOlduguAyYil</td>
+                <td colspan="2"></td>
+                <td align="right" style="font-weight:bold;"> Tarih : &nbsp;</td>
+                <td align="right"> @Model.Date.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width:100%;border-radius: 25px !important;border: 2px solid black;" border="1">
+                        <tr align="center">
+                            <td style="width:50%;font-weight:bold;">
+                                <b>CİNSİ</b>
+                            </td>
+                            <td>
+                                <b>TUTARI</b>
+                            </td>
+                        </tr>
+                        @{ int k = 0;
+                            foreach (var item in receipts)
+                            {
+                                <tr>
+                                    <td style="font-weight:bold;">
+                                        @item.Revenues.RevenuesType.Name @(item.Description !="" && item.Description!=null? "(" + item.Description + ")":"")
+                                    </td>
+                                    <td align="right">
+                                        @item.Money TL
+                                    </td>
+                                </tr>
+                                k++;
+                            }
+                            for (int j = 0; j < 10 - k; j++)
+                            {
+                                <tr>
+                                    <td>
+                                        <br />
+                                    </td>
+                                    <td>
+                                        <br />
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        <tr>
+                            <td align="right" style="font-weight:bold;">
+                                TOPLAM :
+                            </td>
+                            <td align="right">
+                                @receipts.Sum(x => x.Money) TL
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td colspan="4" valign="top" style="padding-top: 10px;">
+                    <table style="width: 80%;margin-left:10%">
+                        <tr valign="top">
+                            <td style="text-align:center;vertical-align:top;">
+                                @receipts.Sum(x => x.Money) TL
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Yazıyla :  <label id="yaziyla"></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 15px;">
+                                Sayın @(receipts.FirstOrDefault() != null ? receipts.FirstOrDefault().Person.Name : "")'dan Alınmıştır.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 15px;">
+                                Makbuzu Verenin
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b> Adı Soyadı : </b> @ViewBag.SiteManagerName <br />
+                                <b> İmza : </b>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<br />
+@if (Model.RenevuesCollecting_RS.Any())
+{
+    <button onclick="Print()" class="btn btn-success">YAZDIR</button>
+}
+@section scripts{
+    <script type="text/javascript">
+        function Print() {
+            var printContents = document.getElementById('printDiv').innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            //$("#printDiv").printElement();
+        }
+    </script>
+
+    <script>
+
+    String.prototype.capitalize = function () {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    }
+
+    document.getElementById("yaziyla").innerHTML = sayiyiYaziyaCevir("@receipts.Sum(x => x.Money)", 2, "TL", "KR", "", null, null, null).capitalize();
+    function sayiyiYaziyaCevir(sayi, kurusbasamak, parabirimi, parakurus, diyez, bb1, bb2, bb3) {
+
+        var b1 = ["", "bir", "iki", "üç", "dört", "beş", "altı", "yedi", "sekiz", "dokuz"];
+        var b2 = ["", "on", "yirmi", "otuz", "kırk", "elli", "altmış", "yetmiş", "seksen", "doksan"];
+        var b3 = ["", "yüz", "bin", "milyon", "milyar", "trilyon", "katrilyon"];
+
+        if (bb1 != null) { // farklı dil kullanımı yada farklı yazım biçimi için
+            b1 = bb1;
+        }
+        if (bb2 != null) { // farklı dil kullanımı
+            b2 = bb2;
+        }
+        if (bb3 != null) { // farklı dil kullanımı
+            b3 = bb3;
+        }
+
+        var say1, say2 = ""; // say1 virgül öncesi, say2 kuruş bölümü
+        var sonuc = "";
+
+        sayi = sayi.replace(",", "."); //virgül noktaya çevrilir
+
+        if (sayi.indexOf(".") > 0) { // nokta varsa (kuruş)
+
+            say1 = sayi.substring(0, sayi.indexOf(".")); // virgül öncesi
+            say2 = sayi.substring(sayi.indexOf("."), sayi.length); // virgül sonrası, kuruş
+
+        } else {
+            say1 = sayi; // kuruş yok
+        }
+
+        rk = say1.split(""); // rakamlara ayırma
+
+        var son;
+        var w = 1; // işlenen basamak
+        var sonaekle = 0; // binler on binler yüzbinler vs. için sona bin (milyon,trilyon...) eklenecek mi?
+        var kac = rk.length; // kaç rakam var?
+        var sonint; // işlenen basamağın rakamsal değeri
+        var uclubasamak = 0; // hangi basamakta (birler onlar yüzler gibi)
+        var artan = 0;  // binler milyonlar milyarlar gibi artışları yapar
+        var gecici;
+
+        if (kac > 0) { // virgül öncesinde rakam var mı?
+
+            for (i = 0; i < kac; i++) {
+
+                son = rk[kac - 1 - i]; // son karakterden başlayarak çözümleme yapılır.
+                sonint = parseInt(son); // işlenen rakam
+
+                if (w == 1) { // birinci basamak bulunuyor
+
+                    sonuc = b1[sonint] + sonuc;
+
+                } else if (w == 2) { // ikinci basamak
+
+                    sonuc = b2[sonint] + sonuc;
+
+                } else if (w == 3) { // 3. basamak
+
+                    if (sonint == 1) {
+                        sonuc = b3[1] + sonuc;
+                    } else if (sonint > 1) {
+                        sonuc = b1[sonint] + b3[1] + sonuc;
+                    }
+                    uclubasamak++;
+                }
+
+                if (w > 3) {    // 3. basamaktan sonraki işlemler
+
+                    if (uclubasamak == 1) {
+
+                        if (sonint > 0) {
+                            sonuc = b1[sonint] + b3[2 + artan] + sonuc;
+                            if (artan == 0) { // birbin yazmasını engelle
+                                if (kac - 1 == i) { //
+                                    sonuc = sonuc.replace(b1[1] + b3[2], b3[2]);
+                                }
+                            }
+                            sonaekle = 1; // sona bin eklendi
+                        } else {
+                            sonaekle = 0;
+                        }
+                        uclubasamak++;
+
+                    } else if (uclubasamak == 2) {
+
+                        if (sonint > 0) {
+                            if (sonaekle > 0) {
+                                sonuc = b2[sonint] + sonuc;
+                                sonaekle++;
+                            } else {
+                                sonuc = b2[sonint] + b3[2 + artan] + sonuc;
+                                sonaekle++;
+                            }
+                        }
+                        uclubasamak++;
+
+                    } else if (uclubasamak == 3) {
+
+                        if (sonint > 0) {
+                            if (sonint == 1) {
+                                gecici = b3[1];
+                            } else {
+                                gecici = b1[sonint] + b3[1];
+                            }
+                            if (sonaekle == 0) {
+                                gecici = gecici + b3[2 + artan];
+                            }
+                            sonuc = gecici + sonuc;
+                        }
+                        uclubasamak = 1;
+                        artan++;
+                    }
+
+                }
+
+                w++; // işlenen basamak
+
+            }
+        } // if(kac>0)
+
+        if (sonuc == "") { // virgül öncesi sayı yoksa para birimi yazma
+            parabirimi = "";
+        }
+
+        say2 = say2.replace(".", "");
+        var kurus = "";
+
+        if (say2 != "") { // kuruş hanesi varsa
+
+            if (kurusbasamak > 3) { // 3 basamakla sınırlı
+                kurusbasamak = 3;
+            }
+            var kacc = say2.length;
+            if (kacc == 1) {
+                say2 = say2 + "0";
+                kurusbasamak = 2;
+            }
+            if (say2.length > kurusbasamak) { // belirlenen basamak kadar rakam yazılır
+                say2 = say2.substring(0, kurusbasamak);
+            }
+            kurusrk = say2.split(""); // rakamlara ayırma
+            kac = kurusrk.length; // kaç rakam var?
+            w = 1;
+
+            for (i = 0; i < kac; i++) { // kuruş hesabı
+
+                son = kurusrk[kac - 1 - i]; // son karakterden başlayarak çözümleme yapılır.
+                sonint = parseInt(son); // işlenen rakam
+
+                if (w == 1) { // birinci basamak
+
+                    if (kurusbasamak > 0) {
+                        kurus = b1[sonint] + kurus;
+                    }
+
+                } else if (w == 2) { // ikinci basamak
+                    if (kurusbasamak > 1) {
+                        kurus = b2[sonint] + kurus;
+                    }
+
+                } else if (w == 3) { // 3. basamak
+                    if (kurusbasamak > 2) {
+                        if (sonint == 1) { // 'biryüz' ü engeller
+                            kurus = b3[1] + kurus;
+                        } else if (sonint > 1) {
+                            kurus = b1[sonint] + b3[1] + kurus;
+                        }
+                    }
+                }
+                w++;
+            }
+            if (kurus == "") { // virgül öncesi sayı yoksa para birimi yazma
+                parakurus = "";
+            } else {
+                kurus = kurus + " ";
+            }
+            kurus = kurus + parakurus; // kuruş hanesine 'kuruş' kelimesi ekler
+        }
+
+        sonuc = diyez + sonuc + " " + parabirimi + " " + kurus + diyez;
+
+        return sonuc.capitalize();
+
+    }
+
+    </script>
+}

@@ -1,0 +1,138 @@
+﻿@model IEnumerable<Person>
+
+@{
+    ViewBag.Title = "ResidentIndex";
+}
+
+<div class="form-horizontal" style="background-color:#c1e0ff;">
+    <div class="col-md-12 tab-title">
+        <ul class="nav nav-pills mb-3">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#tab1" aria-selected="false"><b>OTURAN EKLE</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#close" aria-selected="false">KAPAT</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="tab-content">
+    <div id="close"></div>
+    <div class="tab-pane " id="tab1">
+        @using (Html.BeginForm("RegisterResident", "Account", FormMethod.Post, new { id = "create" }))
+        {
+            <div class="form-horizontal add-new-item" >
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>ADI SOYADI</b></label>
+                    <div class="col-md-3">
+                        <input name="Name" class="form-control" required />
+                    </div>
+                    <label class="control-label col-md-1"><b>DAİRE SEÇİNİZ</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("ApartmentId", null, "Seçiniz", htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                    <label class="control-label col-md-1"><b>GÖREVİ</b></label>
+                    <div class="col-md-3">
+                        @Html.DropDownList("PersonTypeId", null, "Seçiniz", htmlAttributes: new { @class = "form-control select2", @required = "required" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-1"><b>TELEFON</b></label>
+                    <div class="col-md-3">
+                        <input name="PhoneNumber" class="form-control" required maxlength="10" min="1000000000" />
+                    </div>
+                    <label class="control-label col-md-1"><b>BAŞLAMA TARİHİ</b></label>
+                    <div class="col-md-3">
+                        <input name="StartDate" type="date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <label class="control-label col-md-1"><b>ŞİFRE</b></label>
+                    <div class="col-md-3">
+                        <input name="Password" type="password" class="form-control" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="submit" value="KAYDET" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="form-horizontal table-div">
+    <div class="col-md-12 table-border">
+        <div class="form-group">
+            <div class="col-md-12 table-title">
+                OTURAN LİSTESİ
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <table class="table table-striped table-bordered responsive" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Daire No</th>
+                            <th>Adi</th>
+                            <th>Görevi</th>
+                            <th>Telefon</th>
+                            <th>Başlama Tarihi</th>
+                            <th>Bitiş Tarihi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int i = 1;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @i
+                                    </td>
+                                    <td>@(item.ApartmentId != null ? (item.Apartment.BlockId != null ? item.Apartment.Block.Name + " - " + item.Apartment.No : item.Apartment.No) : "")</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PersonType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                    </td>
+                                    <td>
+                                        @(item.StartDate.ToShortDateString())
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a data-toggle="modal" href="~/Resident/_CreateEdit/@item.Id" class="modal-link btn btn-warning btn-secondary">
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-secondary" onclick="bootbox.confirm('Silmek İstediğinize Emin Misiniz?', function (q) { if (!q) return true; else window.location.href = '@Url.Action("Delete","Resident")/@item.Id'})">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#Oturanlar").addClass("active");
+            $("#Kullanıcılar").addClass("active");
+        });
+    </script>
+}

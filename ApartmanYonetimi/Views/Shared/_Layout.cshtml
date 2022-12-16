@@ -1,0 +1,352 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ApartmanYonetimi</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <style>
+        .container {
+            width: 90% !important;
+        }
+
+        /*.modal .form-horizontal{
+            padding: 10px;
+        }*/
+
+        .active {
+            background-color: #36a9e0 !important;
+            /*color: white !important;*/
+        }
+
+        .buttons-excel {
+            margin-right: 10px;
+        }
+
+        .select2 {
+            width: 100% !important;
+        }
+
+        .form-control {
+            display: unset !important;
+        }
+
+        .select2-selection {
+            height: 34px !important;
+        }
+
+        table th:last-child{
+            width:180px;
+        }
+
+        table td:last-child{
+            text-align:center;
+        }
+
+        .btn-group > a {
+            padding: 2px 16px !important;
+        }
+
+        /*.loading {
+            z-index: 999999;
+            background: white;
+            height: 100%;
+            width: 100%;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: .9;
+        }
+
+        .loadingImg {
+            margin-left: auto;
+            margin-right: auto;
+            width: 75px;
+            display: block;
+            margin-top: 115px;
+            margin-top: 25%;
+            margin-bottom: 50px;
+        }*/
+
+        .collapse-title {
+            background-color: #c1e0ff;
+            color: darkblue !important;
+            text-align: center;
+        }
+
+        .menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            .menu ul li ul {
+                display: none;
+                position: absolute;
+            }
+
+
+
+        .menu li {
+            color: white;
+            width: 130px;
+            text-align: center;
+        }
+
+            .menu li a {
+                display: block;
+                border-left: 1px solid #595959;
+                border-right: 1px solid #595959;
+                border-bottom: 3px solid #f9b233;
+                color: white !important;
+                padding-bottom: 15px;
+                padding-top: 15px;
+            }
+
+        .navbar-header ul li ul {
+            padding-left: 129px;
+            margin-top: -53px !important;
+        }
+
+        .menu ul li ul li {
+            background: #5f5f5f;
+        }
+
+        .menu ul li:hover ul {
+            display: block;
+            text-align: left;
+        }
+
+        @@media only screen and (max-width: 600px) {
+            .menu ul li ul {
+                padding-left: 129px;
+                margin-top: -53px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading"></div>
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#223d72 !important;">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+            </div>
+            <div class="navbar-collapse collapse menu" style="color: white !important; font-weight: bold; ">
+                <ul class="nav navbar-nav">
+                    @if (User.IsInRole("Yonetici") || User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a href="#" id="Ayarlar">AYARLAR</a>
+                            <ul>
+                                <li><a href="~/Block" id="Bloklar">Bloklar</a></li>
+                                <li><a href="~/Apartment" id="Daireler">Daireler</a></li>
+                                <li><a href="~/Company" id="Firmalar">Firmalar</a></li>
+                                <li><a href="~/Definition/RevenuesTypeIndex" id="AidatTipleri">Aidat Tipleri</a></li>
+                                <li><a href="~/Definition/PaymentTypeIndex" id="HarcamaTipleri">Harcama Tipleri</a></li>
+                                <li><a href="~/Definition/PersonTypeIndex" id="PersonelTipleri">Personel Tipleri</a></li>
+                                <li><a href="~/Definition/SafeTypeIndex" id="KasaTipleri">Kasa Tipleri</a></li>
+                            </ul>
+                            @*                        <a href="#" id="Ayarlar" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">AYARLAR</a>
+                                <ul class="dropdown-menu" aria-labelledby="Ayarlar">
+                                    <li><a href="~/Block" id="Bloklar">Bloklar</a></li>
+                                    <li><a href="~/Apartment" id="Daireler">Daireler</a></li>
+                                    <li><a href="~/Company" id="Firmalar">Firmalar</a></li>
+                                </ul>
+
+
+                                    <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Dropdown button
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    </div>
+                                </div>*@
+                        </li>
+                        <li>
+                            <a href="#" id="Kullanıcılar">KULLANICILAR</a>
+                            <ul>
+                                <li><a href="~/Resident" id="Oturanlar">Oturanlar</a></li>
+                                <li><a href="~/Person" id="Personeller">Personeller</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" id="Aidat">AİDAT</a>
+                            <ul>
+                                <li><a href="~/Revenues" id="Aidatlar">Aidat Ekle</a></li>
+                                <li><a href="~/Revenues/Table" id="AidatListesi">Aidat Listesi</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="~/Subsistence" id="Harcırahlar">HARCIRAHLAR</a></li>
+                        <li><a href="~/Payment" id="Harcamalar">HARCAMALAR</a></li>
+                        <li><a href="~/Collecting" id="Ödemeler">ÖDEMELER</a></li>
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li><a href="~/Definition/SiteIndex" id="SiteEkle">SİTE EKLE</a></li>
+                            <li><a href="~/Definition/SiteManagerIndex" id="YöneticiEkle">Yönetici Ekle</a></li>
+                        }
+                    }
+                    else if (User.IsInRole("Oturan"))
+                    {
+                        @*<li><a href="~/Payment" style="color:white;" id="Harcamalar">Harcamalar</a></li>*@
+                        <li><a href="~/Revenues/Table" style="color:white;" id="AidatListesi">Aidat Listesi</a></li>
+                        @*<li><a href="~/Collecting" style="color:white;" id="Ödemeler">Ödemeler</a></li>*@
+                    }
+                    else if (User.IsInRole("Personel"))
+                    {
+                        <li><a href="~/Company" style="color:white;" id="Firmalar">FİRMALAR</a></li>
+                        <li><a href="~/Payment" style="color:white;" id="Harcamalar">HARCAMALAR</a></li>
+                        <li><a href="~/Revenues/Table" style="color:white;" id="AidatListesi">AİDAT LİSTESİ</a></li>
+                    }
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content" style="padding-top: 10px;">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year </p>
+        </footer>
+    </div>
+    <div id="modal-container" class="modal fade" tabindex="-1" role="dialog" align="center" style="width:90%;right:5%;left:5%;">
+        <div class="modal-content" align="center" >
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+<script src="~/Scripts/bootbox/bootbox.min.js"></script>
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+<script>
+    //$(document).ready(function () {
+    //    window.history.pushState({}, document.title, "/");
+    //});
+    $(function () {
+                    $('body').on('click', '.modal-link', function (e) {
+                        e.preventDefault();
+                $(this).attr('data-target', '#modal-container');
+                $(this).attr('data-toggle', 'modal');
+            });
+
+            // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+            $('body').on('click', '.modal-close-btn', function () {
+                $('#modal-container').modal('hide');
+                location.reload()
+            });
+
+            //clear modal cache, so that new content can be loaded
+            $('#modal-container').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+                location.reload()
+            });
+
+            $('#CancelModal').on('click', function () {
+                return false;
+            });
+        //$("form").submit(function () {
+        //    $(".loading").show();
+        //})
+        $('.select2').select2({
+            placeholder: "Seçiniz",
+        });
+        $(".money").keypress(function (e) {
+            let $this = $(this);
+            var str = $($this).val().substring($($this).val().lastIndexOf(","), $($this).val().length);
+            if (e.keyCode == 46 && $($this).val().indexOf(",") < 0 && $($this).val().length > 0) {
+                e.preventDefault();
+                $($this).val($($this).val() + ",");
+                return false;
+            } else if (e.keyCode < 44 || e.keyCode > 57 || e.keyCode == 47 || e.keyCode == 45) {
+                return false;
+            } else if ($($this).val().indexOf(",") >= 0) {
+                if (e.keyCode < 44 || e.keyCode > 57 || e.keyCode == 44 || e.keyCode == 46 || str.length > 2) {
+                    return false;
+                }
+            } else if ((e.keyCode == 46 || e.keyCode == 44) && $($this).val().length == 0) {
+                return false;
+            } else if ($($this).val().length == 10) {
+                return false;
+            }
+        })
+
+        //$("a:not(.dontshowloading)[href][href!='']:not([href*='#']):not([href*='javascript'])").click(function () {
+        //    $(".loading").show();
+        //})
+        //$(document).ready(function () {
+        //    $(".loading").hide();
+        //});
+
+    });
+
+    $(document).ready(function () {
+        window.dataTable = $('#dataTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'Liste',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                data = $('<p>' + data.replace(/(?:\r\n|\r|\n)/gi, '').replace(/ /gi, "").replace('İNCELE', '') + '</p>').text();
+                                data = $('<p>' + data.replace('aaaaaaaaaaaaaaaaa', "") + '</p>').text();
+                                return $.isNumeric(data.replace(',', '.')) ? data.replace(',', '.') : data;
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Liste',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                data = $('<p>' + data.replace(/(?:\r\n|\r|\n)/gi, '').replace(/ /gi, "").replace('İNCELE', '') + '</p>').text();
+                                return $.isNumeric(data.replace(',', '.')) ? data.replace(',', '.') : data;
+                            }
+                        }
+                    }
+                }
+            ],
+            "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "Hepsi"]],
+            "iDisplayLength": 50,
+            "responsive": true,
+            "language": {
+                "emptyTable": "Gösterilecek ver yok.",
+                "processing": "Veriler yükleniyor",
+                "sDecimal": ".",
+                "sInfo": "_TOTAL_ kayıttan _START_ - _END_ arasındaki kayıtlar gösteriliyor",
+                "sInfoFiltered": "(_MAX_ kayıt içerisinden bulunan)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ".",
+                "sLengthMenu": "Sayfada _MENU_ kayıt göster",
+                "sLoadingRecords": "Yükleniyor...",
+                "sSearch": "Ara:",
+                "sZeroRecords": "Eşleşen kayıt bulunamadı",
+                "oPaginate": {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
+                }
+            }
+        });
+    });
+</script>
